@@ -1,0 +1,87 @@
+{
+  "template_video": "assets/gemini_generated_video_9e6c76b5.mp4",
+  "names_file": "input/names.txt",
+  "output_dir": "output",
+  "duration_seconds": 10,
+  "layers": [
+    {
+      "id": "name_layer",
+      "text": "DEAR {NAME}",
+      "y": 170,
+      "x": 0,
+      "align": "center",
+      "font_family": "sans_bold",
+      "font_size": 38,
+      "color": "#ffffff",
+      "is_dynamic": true,
+      "animation": "slide_up",
+      "uppercase": true,
+      "shadow": true
+    },
+    {
+      "id": "invitation_layer",
+      "text": "KARVE MEILLEUR CORDIALLY INVITES YOU\nTO THE OPENING OF OUR FIRST STORE\nIN HO CHI MINH CITY.",
+      "y": 390,
+      "x": 0,
+      "align": "center",
+      "font_family": "sans_bold",
+      "font_size": 18,
+      "color": "#f5f5f5",
+      "is_dynamic": false,
+      "uppercase": true,
+      "shadow": true
+    },
+    {
+      "id": "brand_layer",
+      "text": "KARVE MEILLEUR",
+      "y": 620,
+      "x": 0,
+      "align": "center",
+      "font_family": "serif_bold",
+      "font_size": 46,
+      "color": "#ffffff",
+      "is_dynamic": false,
+      "uppercase": true,
+      "shadow": true
+    },
+    {
+      "id": "date_layer",
+      "text": "DATE: JANUARY 13, 2026",
+      "y": 790,
+      "x": 0,
+      "align": "center",
+      "font_family": "sans_bold",
+      "font_size": 16,
+      "color": "#ececec",
+      "is_dynamic": false,
+      "uppercase": true,
+      "shadow": true
+    },
+    {
+      "id": "location_layer",
+      "text": "LOCATION: RUE MICHE  L'EDITION,\nUNION SQUARE, LEVEL B3.\n171 DONG KHOI ST, DISTRICT 1. HCMC.",
+      "y": 870,
+      "x": 0,
+      "align": "center",
+      "font_family": "sans_bold",
+      "font_size": 15,
+      "color": "#ececec",
+      "is_dynamic": false,
+      "uppercase": true,
+      "shadow": true
+    },
+    {
+      "id": "website_layer",
+      "text": "KARVEMEILLEUR.COM",
+      "y": 1100,
+      "x": 0,
+      "align": "center",
+      "font_family": "sans_bold",
+      "font_size": 13,
+      "color": "#b0b0b0",
+      "is_dynamic": false,
+      "uppercase": true,
+      "shadow": true
+    }
+  ]
+}

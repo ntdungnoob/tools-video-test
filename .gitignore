@@ -1,0 +1,49 @@
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Render Outputs & Temporary Files
+output/*
+!output/.gitkeep
+scratch_temp/
+font_test.png
+
+# User Uploaded Assets (Video, Audio, Images)
+assets/uploads/*
+!assets/uploads/.gitkeep
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Environment & Sensitive configs
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+credentials.json
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

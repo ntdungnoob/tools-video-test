@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canva Video Studio | Trình Chỉnh Sửa & Tạo Video Hàng Loạt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Bar -->
+    <header class="studio-header">
+      <div class="brand">
+        <div class="logo-badge">✦</div>
+        <div>
+          <h1>CANVA VIDEO STUDIO</h1>
+          <p class="subtitle">Kéo thả vị trí, tùy biến mọi nội dung & xuất video hàng loạt</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <!-- Add text button -->
+        <button id="btnAddText" class="btn-top">
+          <span>➕ Thêm Chữ Mới</span>
+        </button>
+
+        <!-- Upload background video button -->
+        <label for="bgVideoUpload" class="btn-top btn-upload">
+          <span>📁 Đổi Video Nền (.mp4)</span>
+        </label>
+        <input type="file" id="bgVideoUpload" accept="video/mp4,video/quicktime" style="display: none;">
+
+        <div class="header-badge">
+          <span class="pulse-dot"></span> FFmpeg Acceleration
+        </div>
+      </div>
+    </header>
+
+    <!-- Studio Layout -->
+    <main class="studio-workspace">
+      <!-- Left Column: Interactive Visual Canvas -->
+      <section class="canvas-section">
+        <div class="canvas-header">
+          <div class="canvas-title">
+            <span class="tag-live">CANVAS TRỰC QUAN</span>
+            <span class="canvas-hint">Click vào chữ để chỉnh sửa • Kéo thả chuột để đổi vị trí</span>
+          </div>
+          <button id="btnReplayAnim" class="btn-tool" title="Xem lại chuyển động">
+            <span>▶️ Xem Hiệu Ứng</span>
+          </button>
+        </div>
+
+        <div class="canvas-stage">
+          <div class="phone-viewport" id="phoneViewport">
+            <!-- Background Video -->
+            <video id="bgVideo" src="/assets/gemini_generated_video_9e6c76b5.mp4" autoplay loop muted playsinline></video>
+            
+            <!-- Container for all dynamic and static text layers -->
+            <div id="layersContainer" class="layers-overlay"></div>
+          </div>
+        </div>
+
+        <!-- Canvas Footer Info -->
+        <div class="canvas-footer">
+          <span>Tỷ lệ chuẩn: <strong>9:16 (720 x 1280px)</strong></span>
+          <span id="activeCoordDisplay">Chưa chọn lớp nào</span>
+        </div>
+      </section>
+
+      <!-- Right Column: Inspector & Batch Generator -->
+      <section class="sidebar-section">
+        <!-- Sidebar Navigation Tabs -->
+        <div class="sidebar-tabs">
+          <button class="tab-btn active" data-tab="inspectorTab">🎨 Chỉnh Sửa Lớp</button>
+          <button class="tab-btn" data-tab="layersTab">📑 Danh Sách Lớp (<span id="layerCount">6</span>)</button>
+          <button class="tab-btn" data-tab="batchTab">⚡ Xuất Hàng Loạt</button>
+        </div>
+
+        <!-- TAB 1: LAYER INSPECTOR (CANVA STYLE) -->
+        <div class="tab-content active" id="inspectorTab">
+          <div class="inspector-card" id="inspectorCard">
+            <div class="inspector-header">
+              <div class="layer-badge-wrap">
+                <span class="layer-type-tag" id="inspectorLayerType">LỚP CHỮ</span>
+                <span class="layer-id-text" id="inspectorLayerId">#layer_1</span>
+              </div>
+              <div class="layer-quick-actions">
+                <button id="btnDuplicateLayer" class="icon-btn" title="Nhân bản lớp">📋</button>
+                <button id="btnDeleteLayer" class="icon-btn btn-danger" title="Xóa lớp này">🗑️</button>
+              </div>
+            </div>
+
+            <!-- Text Content -->
+            <div class="control-row">
+              <label for="layerText">Nội dung văn bản:</label>
+              <textarea id="layerText" class="styled-textarea" rows="3"></textarea>
+              <span class="input-note">💡 Dùng biến <code>{NAME}</code> để tự động điền tên theo danh sách hàng loạt.</span>
+            </div>
+
+            <!-- Dynamic Name Toggle -->
+            <div class="control-row">
+              <label class="checkbox-container">
+                <input type="checkbox" id="layerIsDynamic">
+                <span class="checkmark"></span>
+                <span class="strong-text">Đặt làm lớp Tên Khách Mời (Biến đổi hàng loạt)</span>
+              </label>
+            </div>
+
+            <!-- Position Controls (X, Y) -->
+            <div class="control-row-grid">
+              <div class="control-col">
+                <div class="label-row">
+                  <label>Vị trí Y (Độ cao):</label>
+                  <span class="badge" id="lblY">170px</span>
+                </div>
+                <input type="range" id="sliderY" min="20" max="1220" step="2">
+              </div>
+
+              <div class="control-col">
+                <div class="label-row">
+                  <label>Vị trí X (Lệch ngang):</label>
+                  <span class="badge" id="lblX">0px</span>
+                </div>
+                <input type="range" id="sliderX" min="-300" max="300" step="2">
+              </div>
+            </div>
+
+            <!-- Quick Position Buttons -->
+            <div class="control-row">
+              <label>Căn nhanh vị trí:</label>
+              <div class="preset-pill-group">
+                <button type="button" class="pill-btn" data-pos="top">🔝 Trên cùng</button>
+                <button type="button" class="pill-btn" data-pos="middle">⏺️ Ở giữa</button>
+                <button type="button" class="pill-btn" data-pos="bottom">🔻 Dưới cùng</button>
+              </div>
+            </div>
+
+            <!-- Typography & Styling -->
+            <div class="control-row-grid">
+              <!-- Font Family -->
+              <div class="control-col">
+                <label for="layerFont">Kiểu Font:</label>
+                <select id="layerFont" class="styled-select">
+                  <option value="sans_bold">Sans-Serif Đậm (Hiện đại)</option>
+                  <option value="sans_regular">Sans-Serif Thường (Thanh mảnh)</option>
+                  <option value="serif_bold">Serif Đậm (Sang trọng/Classic)</option>
+                  <option value="serif_regular">Serif Thường (Cổ điển)</option>
+                  <option value="mono_bold">Monospace (Kỹ thuật số)</option>
+                </select>
+              </div>
+
+              <!-- Font Size -->
+              <div class="control-col">
+                <div class="label-row">
+                  <label for="sliderFontSize">Cỡ chữ:</label>
+                  <span class="badge" id="lblFontSize">38px</span>
+                </div>
+                <input type="range" id="sliderFontSize" min="12" max="72" step="1">
+              </div>
+            </div>
+
+            <!-- Alignment & Colors -->
+            <div class="control-row-grid">
+              <!-- Text Alignment -->
+              <div class="control-col">
+                <label>Căn lề ngang:</label>
+                <div class="align-btn-group">
+                  <button type="button" class="align-btn" data-align="left">⫷ Trái</button>
+                  <button type="button" class="align-btn active" data-align="center">⫹ Giữa</button>
+                  <button type="button" class="align-btn" data-align="right">⫸ Phải</button>
+                </div>
+              </div>
+
+              <!-- Color Picker -->
+              <div class="control-col">
+                <label for="layerColor">Màu chữ:</label>
+                <div class="color-picker-wrap">
+                  <input type="color" id="layerColor" value="#ffffff">
+                  <input type="text" id="layerColorHex" class="styled-input hex-input" value="#FFFFFF">
+                </div>
+              </div>
+            </div>
+
+            <!-- Effects & Toggles -->
+            <div class="control-row-grid">
+              <!-- Animation -->
+              <div class="control-col">
+                <label for="layerAnim">Hiệu ứng (Animation):</label>
+                <select id="layerAnim" class="styled-select">
+                  <option value="slide_up">🚀 Trượt từ dưới lên (Slide Up)</option>
+                  <option value="fade">✨ Mờ dần sang rõ (Fade In)</option>
+                  <option value="fade_in_out">🌓 Hiện đầu & Ẩn cuối video</option>
+                  <option value="none">📌 Cố định (Không chuyển động)</option>
+                </select>
+              </div>
+
+              <!-- Toggles -->
+              <div class="control-col flex-center">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="layerUppercase" checked>
+                  <span class="checkmark"></span>
+                  <span>In hoa toàn bộ (UPPERCASE)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: LAYERS LIST -->
+        <div class="tab-content" id="layersTab">
+          <div class="layers-manager-card">
+            <p class="section-desc">Quản lý và chọn nhanh các lớp đang có trên video:</p>
+            <div id="layersList" class="layers-item-list"></div>
+            <button id="btnAddText2" class="btn-outline full-width">➕ Thêm Lớp Chữ Mới</button>
+          </div>
+        </div>
+
+        <!-- TAB 3: BATCH GENERATOR -->
+        <div class="tab-content" id="batchTab">
+          <div class="batch-card">
+            <div class="batch-header">
+              <h3>Nhập Danh Sách Khách Mời</h3>
+              <span class="counter-badge" id="nameCounter">3 người</span>
+            </div>
+
+            <div class="control-row">
+              <label for="namesTextarea">Mỗi dòng tương ứng 1 video riêng biệt:</label>
+              <textarea id="namesTextarea" class="styled-textarea" rows="6" placeholder="nguyễn văn a&#10;nguyễn văn b&#10;nguyễn văn c">nguyễn văn a
+nguyễn văn b
+nguyễn văn c</textarea>
+            </div>
+
+            <div class="control-row-grid">
+              <div class="control-col">
+                <label for="durationSelect">Thời lượng mỗi video:</label>
+                <select id="durationSelect" class="styled-select">
+                  <option value="5">5 giây (Nhanh nhất)</option>
+                  <option value="10" selected>10 giây (Khuyên dùng)</option>
+                  <option value="20">20 giây (Trọn vẹn video nền)</option>
+                </select>
+              </div>
+              <div class="control-col">
+                <label for="batchSizeSelect">Số video chạy mỗi đợt (Batch):</label>
+                <select id="batchSizeSelect" class="styled-select">
+                  <option value="6">6 video / đợt (Rất nhẹ, êm máy)</option>
+                  <option value="8" selected>8 video / đợt (Khuyên dùng - Nhanh & Mượt)</option>
+                  <option value="10">10 video / đợt (Tốc độ tối đa)</option>
+                </select>
+              </div>
+              <div class="control-col">
+                <label>Chế độ Encode:</label>
+                <label class="checkbox-container" style="margin-top:8px;">
+                  <input type="checkbox" id="useGpuToggle">
+                  <span class="checkmark"></span>
+                  <span>⚡ GPU Mode (AMD VAAPI)</span>
+                </label>
+                <span style="font-size:11px;color:var(--text-secondary);margin-top:4px;display:block;">CPU: ổn định, song song 8 luồng.<br>GPU: encode H.264 bằng GPU encoder (thử nghiệm).</span>
+              </div>
+            </div>
+
+            <button id="btnRenderBatch" class="btn-primary">
+              <span class="btn-icon">🚀</span>
+              <span class="btn-text">BẮT ĐẦU XUẤT TOÀN BỘ VIDEO</span>
+            </button>
+
+            <!-- Results area -->
+            <div id="batchResultsSection" class="results-box" style="display: none;">
+              <div class="results-top">
+                <div>
+                  <h4>KẾT QUẢ RENDER (ĐA LUỒNG 6 CORES)</h4>
+                  <span class="sub-hint">💡 Video được lưu tạm thời. Bấm nút dưới để dọn dẹp sau khi tải.</span>
+                </div>
+                <div class="top-action-group">
+                  <a id="btnDownloadZip" href="/api/download-zip" class="btn-zip">📦 TẢI TRỌN BỘ .ZIP</a>
+                  <button id="btnClearTemp" class="btn-clear" title="Xóa toàn bộ video tạm để giải phóng ổ cứng">🧹 XÓA DỮ LIỆU TẠM</button>
+                </div>
+              </div>
+              <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+              </div>
+              <p id="progressStatus" class="progress-status">Đang xử lý...</p>
+              <div id="resultsGrid" class="results-grid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
