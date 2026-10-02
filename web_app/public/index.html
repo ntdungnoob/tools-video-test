@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Canva Video Studio | Trình Chỉnh Sửa & Tạo Video Hàng Loạt</title>
+  <title>Trình Chỉnh Sửa & Tạo Video Hàng Loạt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
       <div class="brand">
         <div class="logo-badge">✦</div>
         <div>
-          <h1>CANVA VIDEO STUDIO</h1>
+          <h1>VIDEO STUDIO</h1>
           <p class="subtitle">Kéo thả vị trí, tùy biến mọi nội dung & xuất video hàng loạt</p>
         </div>
       </div>
@@ -197,14 +197,23 @@
                 </select>
               </div>
 
-              <!-- Toggles -->
-              <div class="control-col flex-center">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="layerUppercase" checked>
-                  <span class="checkmark"></span>
-                  <span>In hoa toàn bộ (UPPERCASE)</span>
-                </label>
+              <!-- Animation Delay -->
+              <div class="control-col" id="colAnimDelay">
+                <div class="label-row">
+                  <label for="sliderAnimDelay">Thời điểm xuất hiện:</label>
+                  <span class="badge" id="lblAnimDelay">0.8s</span>
+                </div>
+                <input type="range" id="sliderAnimDelay" min="0" max="5" step="0.1" value="0.8">
               </div>
+            </div>
+
+            <!-- Toggles -->
+            <div class="control-row">
+              <label class="checkbox-container">
+                <input type="checkbox" id="layerUppercase" checked>
+                <span class="checkmark"></span>
+                <span>In hoa toàn bộ (UPPERCASE)</span>
+              </label>
             </div>
           </div>
         </div>

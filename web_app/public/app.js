@@ -120,6 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const layerColor = document.getElementById('layerColor');
   const layerColorHex = document.getElementById('layerColorHex');
   const layerAnim = document.getElementById('layerAnim');
+  const sliderAnimDelay = document.getElementById('sliderAnimDelay');
+  const lblAnimDelay = document.getElementById('lblAnimDelay');
+  const colAnimDelay = document.getElementById('colAnimDelay');
   const layerUppercase = document.getElementById('layerUppercase');
   const alignBtns = document.querySelectorAll('.align-btn');
   const presetPills = document.querySelectorAll('.pill-btn');
@@ -175,6 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (layer.animation && layer.animation !== 'none') {
         el.classList.add(`anim-${layer.animation}`);
+        const delay = layer.delay !== undefined ? Number(layer.delay) : 0.8;
+        el.style.animationDelay = `${delay}s`;
       }
 
       let displayContent = layer.text;
@@ -272,6 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
     layerColor.value = layer.color;
     layerColorHex.value = layer.color.toUpperCase();
     layerAnim.value = layer.animation || "none";
+    const curDelay = layer.delay !== undefined ? Number(layer.delay) : (layer.animation && layer.animation !== 'none' ? 0.8 : 0);
+    sliderAnimDelay.value = curDelay;
+    lblAnimDelay.textContent = `${curDelay.toFixed(1)}s`;
+    const hasAnim = layer.animation && layer.animation !== 'none';
+    colAnimDelay.style.opacity = hasAnim ? '1' : '0.4';
+    sliderAnimDelay.disabled = !hasAnim;
     layerUppercase.checked = layer.uppercase;
 
     alignBtns.forEach(btn => {
@@ -370,6 +381,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const layer = layers.find(l => l.id === selectedLayerId);
     if (layer) {
       layer.animation = layerAnim.value;
+      const hasAnim = layer.animation !== 'none';
+      colAnimDelay.style.opacity = hasAnim ? '1' : '0.4';
+      sliderAnimDelay.disabled = !hasAnim;
+      if (hasAnim && layer.delay === undefined) {
+        layer.delay = 0.8;
+        sliderAnimDelay.value = 0.8;
+        lblAnimDelay.textContent = "0.8s";
+      }
+      renderCanvas();
+    }
+  });
+
+  sliderAnimDelay.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === selectedLayerId);
+    if (layer) {
+      layer.delay = parseFloat(sliderAnimDelay.value);
+      lblAnimDelay.textContent = `${layer.delay.toFixed(1)}s`;
       renderCanvas();
     }
   });
@@ -489,6 +517,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   btnReplayAnim.addEventListener('click', () => {
+    bgVideo.currentTime = 0;
+    bgVideo.play();
     renderCanvas();
   });
 

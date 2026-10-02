@@ -1,0 +1,14 @@
+{
+  "name": "tools-video-test",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "dev": "bun run --watch src/server.ts",
+    "build": "bun build ./src/server.ts --compile --minify --outfile dist/video-tool"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
