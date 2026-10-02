@@ -6,10 +6,14 @@ import { sanitizeFilename } from "./utils";
 export const VAAPI_DEVICE = "/dev/dri/renderD128";
 
 export const FONT_MAP: Record<string, string> = {
-  sans_bold: "assets/fonts/sans_bold.ttf",
-  sans_regular: "assets/fonts/sans_regular.ttf",
+  dancing_script: "assets/fonts/dancing_script.ttf",
+  playfair_bold: "assets/fonts/playfair_bold.ttf",
   serif_bold: "assets/fonts/serif_bold.ttf",
   serif_regular: "assets/fonts/serif_regular.ttf",
+  montserrat_bold: "assets/fonts/montserrat_bold.ttf",
+  sans_bold: "assets/fonts/sans_bold.ttf",
+  sans_regular: "assets/fonts/sans_regular.ttf",
+  oswald_bold: "assets/fonts/oswald_bold.ttf",
   mono_bold: "assets/fonts/mono_bold.ttf"
 };
 

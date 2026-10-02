@@ -6,7 +6,7 @@
   <title>Trình Chỉnh Sửa & Tạo Video Hàng Loạt</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Dancing+Script:wght@600;700&family=Montserrat:wght@600;700;800&family=Oswald:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,7 +14,6 @@
     <!-- Top Bar -->
     <header class="studio-header">
       <div class="brand">
-        <div class="logo-badge">✦</div>
         <div>
           <h1>VIDEO STUDIO</h1>
           <p class="subtitle">Kéo thả vị trí, tùy biến mọi nội dung & xuất video hàng loạt</p>
@@ -35,6 +34,24 @@
 
         <div class="header-badge">
           <span class="pulse-dot"></span> FFmpeg Acceleration
+        </div>
+
+        <!-- Theme Switcher Dropdown (Popover Menu) -->
+        <div class="theme-dropdown" id="themeDropdown">
+          <button type="button" class="theme-trigger-btn" id="themeTriggerBtn" title="Chọn giao diện (Theme)" aria-label="Theme">
+            <span id="themeCurrentIcon">☀️</span>
+          </button>
+          <div class="theme-menu" id="themeMenu">
+            <button type="button" class="theme-menu-item" data-theme="light">
+              <span class="theme-item-icon">☀️</span> Light
+            </button>
+            <button type="button" class="theme-menu-item" data-theme="dark">
+              <span class="theme-item-icon">🌙</span> Dark
+            </button>
+            <button type="button" class="theme-menu-item" data-theme="system">
+              <span class="theme-item-icon">💻</span> System
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -93,127 +110,159 @@
               </div>
             </div>
 
-            <!-- Text Content -->
-            <div class="control-row">
-              <label for="layerText">Nội dung văn bản:</label>
-              <textarea id="layerText" class="styled-textarea" rows="3"></textarea>
-              <span class="input-note">💡 Dùng biến <code>{NAME}</code> để tự động điền tên theo danh sách hàng loạt.</span>
+            <!-- SECTION 1: NỘI DUNG & LOẠI LỚP -->
+            <div class="inspector-card-group">
+              <div class="group-title">✍️ Nội dung & Loại lớp</div>
+              <!-- Text Content -->
+              <div class="control-row">
+                <label for="layerText">Nội dung văn bản:</label>
+                <textarea id="layerText" class="styled-textarea" rows="3" placeholder="Nhập chữ tại đây..."></textarea>
+                <span class="input-note">💡 Dùng biến <code>{NAME}</code> để tự động điền tên theo danh sách hàng loạt.</span>
+              </div>
+
+              <!-- Dynamic Name Toggle -->
+              <div class="control-row">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="layerIsDynamic">
+                  <span class="checkmark"></span>
+                  <span class="strong-text">Đặt làm lớp Tên Khách Mời (Biến đổi hàng loạt)</span>
+                </label>
+              </div>
             </div>
 
-            <!-- Dynamic Name Toggle -->
-            <div class="control-row">
-              <label class="checkbox-container">
-                <input type="checkbox" id="layerIsDynamic">
-                <span class="checkmark"></span>
-                <span class="strong-text">Đặt làm lớp Tên Khách Mời (Biến đổi hàng loạt)</span>
-              </label>
-            </div>
-
-            <!-- Position Controls (X, Y) -->
-            <div class="control-row-grid">
-              <div class="control-col">
-                <div class="label-row">
-                  <label>Vị trí Y (Độ cao):</label>
-                  <span class="badge" id="lblY">170px</span>
+            <!-- SECTION 2: KIỂU CHỮ & MÀU SẮC -->
+            <div class="inspector-card-group">
+              <div class="group-title">🎨 Kiểu chữ & Màu sắc</div>
+              <div class="control-row-grid">
+                <!-- Font Family -->
+                <div class="control-col">
+                  <label for="layerFont">Kiểu Font:</label>
+                  <select id="layerFont" class="styled-select">
+                    <optgroup label="✍️ Thiệp cưới & Viết tay">
+                      <option value="dancing_script">Dancing Script (Mềm mại, lãng mạn)</option>
+                    </optgroup>
+                    <optgroup label="👑 Sang trọng & Cổ điển">
+                      <option value="playfair_bold">Playfair Display (Thời trang cao cấp)</option>
+                      <option value="serif_bold">Cinzel Đậm (Hoàng gia, cổ điển)</option>
+                      <option value="serif_regular">Cinzel Thường (Thanh lịch)</option>
+                    </optgroup>
+                    <optgroup label="⚡ Hiện đại & Tinh tế">
+                      <option value="montserrat_bold">Montserrat Đậm (Cân đối, bắt mắt)</option>
+                      <option value="sans_bold">Outfit Đậm (Hiện đại, sang)</option>
+                      <option value="sans_regular">Outfit Thường (Tối giản)</option>
+                    </optgroup>
+                    <optgroup label="📢 Tiêu đề & Sự kiện">
+                      <option value="oswald_bold">Oswald (Cao ráo, nổi bật)</option>
+                      <option value="mono_bold">Monospace (Kỹ thuật số)</option>
+                    </optgroup>
+                  </select>
                 </div>
-                <input type="range" id="sliderY" min="20" max="1220" step="2">
-              </div>
 
-              <div class="control-col">
-                <div class="label-row">
-                  <label>Vị trí X (Lệch ngang):</label>
-                  <span class="badge" id="lblX">0px</span>
-                </div>
-                <input type="range" id="sliderX" min="-300" max="300" step="2">
-              </div>
-            </div>
-
-            <!-- Quick Position Buttons -->
-            <div class="control-row">
-              <label>Căn nhanh vị trí:</label>
-              <div class="preset-pill-group">
-                <button type="button" class="pill-btn" data-pos="top">🔝 Trên cùng</button>
-                <button type="button" class="pill-btn" data-pos="middle">⏺️ Ở giữa</button>
-                <button type="button" class="pill-btn" data-pos="bottom">🔻 Dưới cùng</button>
-              </div>
-            </div>
-
-            <!-- Typography & Styling -->
-            <div class="control-row-grid">
-              <!-- Font Family -->
-              <div class="control-col">
-                <label for="layerFont">Kiểu Font:</label>
-                <select id="layerFont" class="styled-select">
-                  <option value="sans_bold">Sans-Serif Đậm (Hiện đại)</option>
-                  <option value="sans_regular">Sans-Serif Thường (Thanh mảnh)</option>
-                  <option value="serif_bold">Serif Đậm (Sang trọng/Classic)</option>
-                  <option value="serif_regular">Serif Thường (Cổ điển)</option>
-                  <option value="mono_bold">Monospace (Kỹ thuật số)</option>
-                </select>
-              </div>
-
-              <!-- Font Size -->
-              <div class="control-col">
-                <div class="label-row">
-                  <label for="sliderFontSize">Cỡ chữ:</label>
-                  <span class="badge" id="lblFontSize">38px</span>
-                </div>
-                <input type="range" id="sliderFontSize" min="12" max="72" step="1">
-              </div>
-            </div>
-
-            <!-- Alignment & Colors -->
-            <div class="control-row-grid">
-              <!-- Text Alignment -->
-              <div class="control-col">
-                <label>Căn lề ngang:</label>
-                <div class="align-btn-group">
-                  <button type="button" class="align-btn" data-align="left">⫷ Trái</button>
-                  <button type="button" class="align-btn active" data-align="center">⫹ Giữa</button>
-                  <button type="button" class="align-btn" data-align="right">⫸ Phải</button>
+                <!-- Font Size -->
+                <div class="control-col">
+                  <div class="label-row">
+                    <label for="sliderFontSize">Cỡ chữ:</label>
+                    <span class="badge" id="lblFontSize">38px</span>
+                  </div>
+                  <input type="range" id="sliderFontSize" min="12" max="72" step="1">
                 </div>
               </div>
 
-              <!-- Color Picker -->
-              <div class="control-col">
-                <label for="layerColor">Màu chữ:</label>
+              <!-- Text Alignment & Uppercase -->
+              <div class="control-row-grid">
+                <div class="control-col">
+                  <label>Căn lề ngang:</label>
+                  <div class="align-btn-group">
+                    <button type="button" class="align-btn" data-align="left" title="Căn lề trái">⫷ Trái</button>
+                    <button type="button" class="align-btn active" data-align="center" title="Căn giữa">⫹ Giữa</button>
+                    <button type="button" class="align-btn" data-align="right" title="Căn lề phải">⫸ Phải</button>
+                  </div>
+                </div>
+
+                <div class="control-col flex-center">
+                  <label class="checkbox-container">
+                    <input type="checkbox" id="layerUppercase" checked>
+                    <span class="checkmark"></span>
+                    <span>In hoa (UPPERCASE)</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Quick Colors & Picker -->
+              <div class="control-row">
+                <label>Màu chữ (Chọn nhanh hoặc tùy chỉnh):</label>
+                <div class="quick-colors" id="quickColorPalette">
+                  <button type="button" class="color-swatch active" data-color="#ffffff" style="background:#ffffff;" title="Trắng tinh khiết"></button>
+                  <button type="button" class="color-swatch" data-color="#d4af37" style="background:#d4af37;" title="Vàng Gold Ánh Kim"></button>
+                  <button type="button" class="color-swatch" data-color="#e2e8f0" style="background:#e2e8f0;" title="Bạc Platinum"></button>
+                  <button type="button" class="color-swatch" data-color="#e50914" style="background:#e50914;" title="Đỏ Rượu / Đỏ Ruby"></button>
+                  <button type="button" class="color-swatch" data-color="#00c4cc" style="background:#00c4cc;" title="Xanh Ngọc Canva"></button>
+                  <button type="button" class="color-swatch" data-color="#111111" style="background:#111111; border:1px solid #555;" title="Đen Tuyền"></button>
+                </div>
                 <div class="color-picker-wrap">
                   <input type="color" id="layerColor" value="#ffffff">
-                  <input type="text" id="layerColorHex" class="styled-input hex-input" value="#FFFFFF">
+                  <input type="text" id="layerColorHex" class="styled-input hex-input" value="#FFFFFF" placeholder="#FFFFFF">
                 </div>
               </div>
             </div>
 
-            <!-- Effects & Toggles -->
-            <div class="control-row-grid">
-              <!-- Animation -->
-              <div class="control-col">
-                <label for="layerAnim">Hiệu ứng (Animation):</label>
-                <select id="layerAnim" class="styled-select">
-                  <option value="slide_up">🚀 Trượt từ dưới lên (Slide Up)</option>
-                  <option value="fade">✨ Mờ dần sang rõ (Fade In)</option>
-                  <option value="fade_in_out">🌓 Hiện đầu & Ẩn cuối video</option>
-                  <option value="none">📌 Cố định (Không chuyển động)</option>
-                </select>
+            <!-- SECTION 3: VỊ TRÍ & CĂN NHANH -->
+            <div class="inspector-card-group">
+              <div class="group-title">📍 Vị trí & Bố cục</div>
+              <div class="control-row">
+                <label>Căn nhanh vị trí:</label>
+                <div class="preset-pill-group">
+                  <button type="button" class="pill-btn" data-pos="top">🔝 Trên cùng</button>
+                  <button type="button" class="pill-btn" data-pos="middle">⏺️ Ở giữa</button>
+                  <button type="button" class="pill-btn" data-pos="bottom">🔻 Dưới cùng</button>
+                </div>
+                <span class="input-note">💡 Gợi ý: Có thể dùng chuột kéo thả trực tiếp chữ trên khung điện thoại bên trái.</span>
               </div>
 
-              <!-- Animation Delay -->
-              <div class="control-col" id="colAnimDelay">
-                <div class="label-row">
-                  <label for="sliderAnimDelay">Thời điểm xuất hiện:</label>
-                  <span class="badge" id="lblAnimDelay">0.8s</span>
+              <!-- Position Sliders -->
+              <div class="control-row-grid">
+                <div class="control-col">
+                  <div class="label-row">
+                    <label>Vị trí Y (Độ cao):</label>
+                    <span class="badge" id="lblY">170px</span>
+                  </div>
+                  <input type="range" id="sliderY" min="20" max="1220" step="2">
                 </div>
-                <input type="range" id="sliderAnimDelay" min="0" max="5" step="0.1" value="0.8">
+
+                <div class="control-col">
+                  <div class="label-row">
+                    <label>Vị trí X (Lệch ngang):</label>
+                    <span class="badge" id="lblX">0px</span>
+                  </div>
+                  <input type="range" id="sliderX" min="-300" max="300" step="2">
+                </div>
               </div>
             </div>
 
-            <!-- Toggles -->
-            <div class="control-row">
-              <label class="checkbox-container">
-                <input type="checkbox" id="layerUppercase" checked>
-                <span class="checkmark"></span>
-                <span>In hoa toàn bộ (UPPERCASE)</span>
-              </label>
+            <!-- SECTION 4: HIỆU ỨNG CHUYỂN ĐỘNG -->
+            <div class="inspector-card-group">
+              <div class="group-title">🎬 Hiệu ứng chuyển động</div>
+              <div class="control-row-grid">
+                <!-- Animation -->
+                <div class="control-col">
+                  <label for="layerAnim">Kiểu hiệu ứng:</label>
+                  <select id="layerAnim" class="styled-select">
+                    <option value="slide_up">🚀 Trượt từ dưới lên (Slide Up)</option>
+                    <option value="fade">✨ Mờ dần sang rõ (Fade In)</option>
+                    <option value="fade_in_out">🌓 Hiện đầu & Ẩn cuối video</option>
+                    <option value="none">📌 Cố định (Không chuyển động)</option>
+                  </select>
+                </div>
+
+                <!-- Animation Delay -->
+                <div class="control-col" id="colAnimDelay">
+                  <div class="label-row">
+                    <label for="sliderAnimDelay">Xuất hiện sau:</label>
+                    <span class="badge" id="lblAnimDelay">0.8s</span>
+                  </div>
+                  <input type="range" id="sliderAnimDelay" min="0" max="5" step="0.1" value="0.8">
+                </div>
+              </div>
             </div>
           </div>
         </div>

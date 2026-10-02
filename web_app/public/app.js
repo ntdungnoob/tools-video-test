@@ -92,6 +92,64 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedLayerId = "layer_1";
   let currentVideoUrl = "/assets/gemini_generated_video_9e6c76b5.mp4";
 
+  // ── Theme Switcher Dropdown (Matching user screenshot) ──
+  const themeTriggerBtn = document.getElementById('themeTriggerBtn');
+  const themeMenu = document.getElementById('themeMenu');
+  const themeCurrentIcon = document.getElementById('themeCurrentIcon');
+  const themeMenuItems = document.querySelectorAll('.theme-menu-item');
+
+  const THEME_ICONS = {
+    light: '☀️',
+    dark: '🌙',
+    system: '💻'
+  };
+
+  function applyTheme(theme) {
+    if (theme === 'system') {
+      const isSystemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', isSystemDark ? 'dark' : 'light');
+      if (themeCurrentIcon) themeCurrentIcon.textContent = isSystemDark ? '🌙' : '☀️';
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (themeCurrentIcon) themeCurrentIcon.textContent = THEME_ICONS[theme] || '☀️';
+    }
+
+    themeMenuItems.forEach(item => {
+      item.classList.toggle('active', item.dataset.theme === theme);
+    });
+    localStorage.setItem('studio_theme', theme);
+  }
+
+  if (themeTriggerBtn && themeMenu) {
+    themeTriggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      themeMenu.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!themeMenu.contains(e.target) && e.target !== themeTriggerBtn) {
+        themeMenu.classList.remove('show');
+      }
+    });
+
+    themeMenuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        applyTheme(item.dataset.theme);
+        themeMenu.classList.remove('show');
+      });
+    });
+  }
+
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      const cur = localStorage.getItem('studio_theme') || 'system';
+      if (cur === 'system') applyTheme('system');
+    });
+  }
+
+  const savedTheme = localStorage.getItem('studio_theme') || 'system';
+  applyTheme(savedTheme);
+
   // Elements
   const layersContainer = document.getElementById('layersContainer');
   const activeCoordDisplay = document.getElementById('activeCoordDisplay');
@@ -147,6 +205,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnClearTemp = document.getElementById('btnClearTemp');
 
   function getCssFont(fontKey) {
+    if (fontKey === 'dancing_script') {
+      return "'Dancing Script', cursive, sans-serif";
+    }
+    if (fontKey === 'playfair_bold') {
+      return "'Playfair Display', Georgia, serif";
+    }
+    if (fontKey === 'montserrat_bold') {
+      return "'Montserrat', sans-serif";
+    }
+    if (fontKey === 'oswald_bold') {
+      return "'Oswald', sans-serif";
+    }
     if (fontKey.startsWith('serif')) {
       return "'Cinzel', Georgia, serif";
     }
@@ -285,6 +355,11 @@ document.addEventListener('DOMContentLoaded', () => {
     sliderAnimDelay.disabled = !hasAnim;
     layerUppercase.checked = layer.uppercase;
 
+    // Update active color swatch
+    document.querySelectorAll('#quickColorPalette .color-swatch').forEach(swatch => {
+      swatch.classList.toggle('active', swatch.dataset.color.toLowerCase() === (layer.color || '').toLowerCase());
+    });
+
     alignBtns.forEach(btn => {
       btn.classList.toggle('active', btn.dataset.align === layer.align);
     });
@@ -364,6 +439,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (layer) {
       layer.color = layerColor.value;
       layerColorHex.value = layerColor.value.toUpperCase();
+      document.querySelectorAll('#quickColorPalette .color-swatch').forEach(swatch => {
+        swatch.classList.toggle('active', swatch.dataset.color.toLowerCase() === layer.color.toLowerCase());
+      });
       renderCanvas();
     }
   });
@@ -373,8 +451,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (layer && /^#[0-9A-F]{6}$/i.test(layerColorHex.value)) {
       layer.color = layerColorHex.value;
       layerColor.value = layerColorHex.value;
+      document.querySelectorAll('#quickColorPalette .color-swatch').forEach(swatch => {
+        swatch.classList.toggle('active', swatch.dataset.color.toLowerCase() === layer.color.toLowerCase());
+      });
       renderCanvas();
     }
+  });
+
+  // Quick Color Swatches click
+  document.querySelectorAll('#quickColorPalette .color-swatch').forEach(swatch => {
+    swatch.addEventListener('click', () => {
+      const layer = layers.find(l => l.id === selectedLayerId);
+      if (layer) {
+        layer.color = swatch.dataset.color;
+        layerColor.value = layer.color;
+        layerColorHex.value = layer.color.toUpperCase();
+        document.querySelectorAll('#quickColorPalette .color-swatch').forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+        renderCanvas();
+      }
+    });
   });
 
   layerAnim.addEventListener('change', () => {

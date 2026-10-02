@@ -6,7 +6,11 @@
   "scripts": {
     "start": "bun run src/server.ts",
     "dev": "bun run --watch src/server.ts",
-    "build": "bun build ./src/server.ts --compile --minify --outfile dist/video-tool"
+    "build": "bun build ./src/server.ts --compile --minify --outfile dist/video-tool",
+    "build:mac": "bun build ./src/server.ts --compile --minify --target=bun-darwin-arm64 --outfile dist/video-tool-mac",
+    "build:mac-intel": "bun build ./src/server.ts --compile --minify --target=bun-darwin-x64 --outfile dist/video-tool-mac-intel",
+    "build:win": "bun build ./src/server.ts --compile --minify --target=bun-windows-x64 --outfile dist/video-tool.exe",
+    "build:all": "bun run build && bun run build:mac && bun run build:mac-intel && bun run build:win"
   },
   "devDependencies": {
     "@types/bun": "latest"
