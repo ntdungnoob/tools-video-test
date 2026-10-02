@@ -148,12 +148,25 @@ export async function renderSingleVideo(options: {
 
   for (let li = 0; li < resolvedLayers.length; li++) {
     const l = resolvedLayers[li];
-    const textTmpPath = join(scratchDir, `web_txt_${idx}_${li}_${Date.now() % 100000}.txt`);
-    await Bun.write(textTmpPath, l.text);
-    tempFiles.push(textTmpPath);
+    const subLines = l.text.split("\n");
+    const lineSpacing = Math.round(l.fontSize * 1.35);
 
-    const filter = buildDrawtextFilter(l, textTmpPath, duration);
-    drawtextChain.push(filter);
+    for (let si = 0; si < subLines.length; si++) {
+      const lineText = subLines[si];
+      if (!lineText.trim()) continue;
+
+      const textTmpPath = join(scratchDir, `web_txt_${idx}_${li}_${si}_${Date.now() % 100000}.txt`);
+      await Bun.write(textTmpPath, lineText);
+      tempFiles.push(textTmpPath);
+
+      const lineLayer: ResolvedLayer = {
+        ...l,
+        yPos: l.yPos + si * lineSpacing,
+      };
+
+      const filter = buildDrawtextFilter(lineLayer, textTmpPath, duration);
+      drawtextChain.push(filter);
+    }
   }
 
   // Xây dựng chuỗi filter_complex

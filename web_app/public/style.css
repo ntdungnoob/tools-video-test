@@ -249,6 +249,7 @@ body {
   text-align: center;
   color: #ffffff;
   padding: 4px 12px;
+  line-height: 1.35;
   cursor: move;
   transition: outline 0.15s, box-shadow 0.15s;
   will-change: transform, top, left, opacity;
