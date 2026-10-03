@@ -171,12 +171,13 @@ const server = Bun.serve({
       let batchSize = Number(payload.batch_size) || 8;
       if (batchSize <= 0) batchSize = 8;
 
-      let templateVideo = join(ASSETS_DIR, "gemini_generated_video_9e6c76b5.mp4");
-      if (payload.video_url && payload.video_url.startsWith("/assets/")) {
-        const customPath = join(ASSETS_DIR, payload.video_url.slice("/assets/".length));
-        if (existsSync(customPath)) {
-          templateVideo = customPath;
-        }
+      // Validate video template — bắt buộc phải upload video nền trước khi render
+      if (!payload.video_url || !payload.video_url.startsWith("/assets/")) {
+        return jsonResponse({ success: false, error: "Chưa có video nền. Vui lòng upload video nền (.mp4) trước khi render." }, 400);
+      }
+      const templateVideo = join(ASSETS_DIR, payload.video_url.slice("/assets/".length));
+      if (!existsSync(templateVideo)) {
+        return jsonResponse({ success: false, error: "Video nền không còn tồn tại (đã bị xóa sau cleanup). Vui lòng upload lại video nền." }, 400);
       }
 
       const totalTasks = names.length;

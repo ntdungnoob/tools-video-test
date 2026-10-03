@@ -690,7 +690,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Lỗi server: ${response.statusText}`);
+        let errMsg = `Lỗi server: ${response.statusText}`;
+        try {
+          const errData = await response.json();
+          if (errData && errData.error) errMsg = errData.error;
+        } catch {}
+        throw new Error(errMsg);
       }
 
       const data = await response.json();
@@ -759,6 +764,10 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(`Đã dọn dẹp thành công! Đã xóa ${data.deleted} file video tạm.`);
         resultsGrid.innerHTML = '';
         batchResultsSection.style.display = 'none';
+        // Reset video nền — user phải upload lại sau khi cleanup
+        currentVideoUrl = "";
+        const uploadBtnLabel = document.querySelector('.btn-upload span');
+        if (uploadBtnLabel) uploadBtnLabel.textContent = '📁 Đổi Video Nền (.mp4)';
       } catch (err) {
         alert("Lỗi khi dọn dẹp: " + err.message);
       }
